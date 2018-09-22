@@ -218,15 +218,16 @@ function get_respons_for_lottery(lottery_id){
     } else {
         return '';
     }
-
-    console.log('start');
     
     data.forEach(function(item, index) {
-        res += '{address:' + item[0];
+        res += '{\"address\":\"' + item[0] + '\",';
         if(item[2] == '') {
-            res += 'used:false}';
+            res += '\"used\":\"false\"}';
         } else {
-            res += 'used:true}'
+            res += '\"used\":\"true\"}'
+        }
+        if(index < 98) {
+            res += ','
         }
     })
     res += ']';
@@ -265,8 +266,6 @@ router.get('/:lottery_id', function (req, res, next) {
         param = get_respons_for_lottery(2);
         //param = {'lottery-id': req.params.lottery_id + ' found!'};
     }
-    console.log('param = ');
-    console.log(param);
     res.header('Content-Type', 'application/json; charset=utf-8')
     res.send(param);
   });
