@@ -1,4 +1,5 @@
 var express = require('express');
+var p2sh = require("../p2sh-output.js");
 var router = express.Router();
 
 var lottery1 = [
@@ -264,9 +265,63 @@ function buy(lottery_id, buy_addr, buyer_addr) {
     return false;
 }
 
-function get_winner_(){
+async function get_hash() {
+    const BITBOXCli = require('bitbox-cli/lib/bitbox-cli').default;
+    const BITBOX = new BITBOXCli({
+    restURL: 'https://trest.bitcoin.com/v1/'
+    });
 
+    const hash = await BITBOX.Blockchain.getBestBlockHash()
+    return hash;
 }
+
+
+router.get('/hoge', (req, res) => res.json({body: 1}))
+
+function get_winner_addr() {
+
+    return [
+        ['9fd599887f9656c51eff5b3284895afc5cae7a79160110b35aa25c61d2a30070', 2000],
+        ['9fd599887f9656c51eff5b3284895afc5cae7a79160110b35aa25c61d2a30070', 1000]
+    ];
+}
+
+router.get('/send', function(req, res, next) {
+
+    var winners = get_winner_addr();
+
+    
+    p2sh.send_prize(winners[0][0], winners[0][1]);
+    //p2sh.send_prize(winners[1][0], winners[1][1]);
+
+    var param = {'status':'ok'};
+    res.send(param)
+
+});
+
+router.get('/test', function(req, res, next) {
+    const hash = get_hash();
+
+    console.log(hash);
+    hash_sub = hash.substr(-8)
+    hash_num = parseInt(hash_sub, 16) % 100000000;
+    console.log(hash_num)
+
+    var min_val = 99999999;
+    var winner_addr = 'const';
+    for(var i = 0; i < 100; i++) {
+        addr_sub = lottery1[i][0].substr(-8);
+        addr_num = parseInt(addr_sub, 36) % 100000000;
+        
+        if(min_val > Math.abs(hash_num - addr_num)) {
+            winner_addr = lottery1[i][2];
+            min_val = Math.abs(hash_num - addr_num);
+        }
+    }
+
+    res.header('Content-Type', 'application/json; charset=utf-8')
+    res.json({ body: { hash }})
+});
 
 router.get('/', function (req, res, next) {
     var param = {'data':[
