@@ -209,8 +209,8 @@ var lottery2 = [
 ];
 
 var lotteries = [
-    [1,'秋ジャンボ', '2018-09-01T09:00:00.000Z', '2018-09-23T23:59:59.999Z', '秋でジャンボな宝くじです。', 1000],
-    [2,'年末ジャンボ', '2018-09-01T09:00:00.000Z', '2018-12-31T23:59:59.999Z', '年末でジャンボな宝くじです。', 1000]
+    [1,'秋ジャンボ', '2018-09-01T09:00:00.000Z', '2018-09-23T23:59:59.999Z', '秋でジャンボな宝くじです。\n1アドレス300satoshi', 1000],
+    [2,'年末ジャンボ', '2018-09-01T09:00:00.000Z', '2018-12-31T23:59:59.999Z', '年末でジャンボな宝くじです。\n1アドレス300satoshi', 1000]
 ];
 
 
@@ -281,8 +281,7 @@ router.get('/hoge', (req, res) => res.json({body: 1}))
 function get_winner_addr() {
 
     return [
-        ['9fd599887f9656c51eff5b3284895afc5cae7a79160110b35aa25c61d2a30070', 2000],
-        ['9fd599887f9656c51eff5b3284895afc5cae7a79160110b35aa25c61d2a30070', 1000]
+        ['9fd599887f9656c51eff5b3284895afc5cae7a79160110b35aa25c61d2a30070', 20000]
     ];
 }
 
@@ -338,6 +337,7 @@ router.get('/', function (req, res, next) {
             'title': lotteries[1][1],
             'begin': lotteries[1][2],
             'end': lotteries[1][3],
+            'describe': lotteries[1][4],
             'price':lotteries[0][5]
         }
     ]};
@@ -359,7 +359,7 @@ router.get('/:lottery_id', function (req, res, next) {
 
 router.get('/:lottery_id/endsoon', function (req, res, next) {
     var date = new Date();
-    date.setMinutes(date.getMinutes() + 1);
+    date.setSeconds(date.getSeconds() + 15);
     date.setHours(date.getHours() + 9);
     var param = {"lotery_id":req.params.lottery_id};
     res.header('Content-Type', 'application/json; charset=utf-8')
