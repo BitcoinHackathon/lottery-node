@@ -264,8 +264,12 @@ function buy(lottery_id, buy_addr, buyer_addr) {
     return false;
 }
 
+function get_winner_(){
+
+}
+
 router.get('/', function (req, res, next) {
-    var param = [
+    var param = {'data':[
         {
             'id': lotteries[0][0],
             'title': lotteries[0][1],
@@ -281,7 +285,7 @@ router.get('/', function (req, res, next) {
             'end': lotteries[1][3],
             'price':lotteries[0][5]
         }
-    ];
+    ]};
     res.header('Content-Type', 'application/json; charset=utf-8')
     res.send(param);
 });
@@ -329,5 +333,6 @@ router.post('/', function (req, res, next) {
         
     }   
 });
+
 
 module.exports = router;
