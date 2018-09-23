@@ -373,6 +373,17 @@ router.get('/:lottery_id/endsoon', function (req, res, next) {
     res.send(param);
 });
 
+router.get('/prize/:buyer_addr', function (req, res, next) {
+    
+    var param = [
+        {
+            'buyer_addr': req.params.buyer_addr,
+            'prize': 1000,
+        },
+    ];
+    res.header('Content-Type', 'application/json; charset=utf-8')
+    res.send(param);
+});
 
 router.post('/', function (req, res, next) {
     var lottery_id = req.body.lottery_id;
