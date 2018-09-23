@@ -208,8 +208,8 @@ var lottery2 = [
 ];
 
 var lotteries = [
-    [1,'秋ジャンボ', '2018-09-01 00:00:00', '2018-09-23 23:59:59', '秋でジャンボな宝くじです。', 1000],
-    [2,'年末ジャンボ', '2018-09-01 00:00:00', '2018-12-31 23:59:59', '年末でジャンボな宝くじです。', 1000]
+    [1,'秋ジャンボ', '2018-09-01T09:00:00.000Z', '2018-09-23T23:59:59.999Z', '秋でジャンボな宝くじです。', 1000],
+    [2,'年末ジャンボ', '2018-09-01T09:00:00.000Z', '2018-12-31T23:59:59.999Z', '年末でジャンボな宝くじです。', 1000]
 ];
 
 
@@ -298,6 +298,23 @@ router.get('/:lottery_id', function (req, res, next) {
     res.send(param);
 });
 
+router.get('/:lottery_id/endsoon', function (req, res, next) {
+    var date = new Date();
+    date.setMinutes(date.getMinutes() + 1);
+    date.setHours(date.getHours() + 9);
+    var param = {"lotery_id":req.params.lottery_id};
+    res.header('Content-Type', 'application/json; charset=utf-8')
+    if(req.params.lottery_id == '1') {
+        lotteries[0][3] = date.toISOString();
+    } else if(req.params.lottery_id == '2') {
+        lotteries[1][3] = date.toISOString();
+    } else {
+        res.status(400).send(param)
+    }
+    res.send(param);
+});
+
+
 router.post('/', function (req, res, next) {
     var lottery_id = req.body.lottery_id;
     var buy_addr = req.body.buy_addr;
@@ -309,7 +326,7 @@ router.post('/', function (req, res, next) {
         res.send(param)
     } else {
         var param = {'status':'ng','lottery_id':lottery_id, 'buy_addr':buy_addr, 'buyer_addr':buyer_addr};
-        res.status(409).send(param)
+        
     }   
 });
 
